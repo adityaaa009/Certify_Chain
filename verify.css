@@ -1,0 +1,129 @@
+/* Reset margin and padding for all elements */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Apply styles to the logo section */
+.logo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(255, 255, 255);
+    padding: 10px 20px;
+    border-bottom: 1px solid rgb(43, 43, 140);
+}
+
+/* Style the user and verify links */
+#user {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    font-size: larger;
+    font-weight: 500;
+    border: 1px solid black;
+    border-radius: 30px;
+    padding: 10px 15px;
+    color: rgb(0, 0, 0);
+}
+
+#verify {
+    display: flex;
+    align-items: center;
+    font-size: larger;
+    font-weight: 500;
+    border: 1px solid black;
+    border-radius: 30px;
+    padding: 10px 15px;
+    color: rgb(0, 0, 0);
+    text-decoration: none;
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+/* Hover effect for user and verify links */
+#user:hover {
+    background-color: rgb(60, 60, 139);
+    cursor: pointer;
+    color: white;
+}
+
+/* Style the font awesome icon */
+.fas {
+    padding-right: 10px;
+}
+
+/* Style the main content */
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 600px;
+    margin: 80px auto;
+    padding: 20px;
+    border: 1px solid black;
+    border-radius: 20px;
+    background-color: #f2f2f2;
+}
+
+/* Style the heading */
+.heading {
+    font-weight: 600;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    margin-bottom: 20px;
+}
+
+/* Style the form */
+form {
+    width: 100%;
+}
+
+/* Style labels in the form */
+label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Style text input fields */
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+/* Style the submit button */
+input[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background-color: rgb(43, 43, 140);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Style the result div */
+#result {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+/* Style the verify div */
+.verify {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 600px;
+    margin: 80px auto;
+    /* Adjust margin as needed */
+    padding: 20px;
+    border: 1px solid black;
+    border-radius: 20px;
+    background-color: #f2f2f2;
+}

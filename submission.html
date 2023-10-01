@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+      integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      .logo {
+        width: 100%;
+        border-bottom: 1px rgb(43, 43, 140) solid;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+      }
+
+      #user {
+        display: flex;
+        align-items: center;
+        font-size: larger;
+        font-weight: 500;
+        border: 1px black solid;
+        border-radius: 30px;
+        padding: 10px 15px;
+      }
+
+      #user:hover {
+        background-color: rgb(60, 60, 139);
+        color: white;
+        cursor: pointer;
+      }
+
+      #verify {
+        text-decoration: none;
+        color: black;
+        display: flex;
+        align-items: center;
+        font-size: larger;
+        font-weight: 500;
+        border: 1px black solid;
+        border-radius: 30px;
+        padding: 10px 15px;
+        margin-left: auto;
+        margin-right: 10px; /* Move the "Verify" div to the right */
+      }
+
+      #verify:hover {
+        background-color: rgb(57, 154, 47);
+        color: white;
+        cursor: pointer;
+      }
+
+      .fas {
+        padding-right: 10px;
+      }
+
+      .main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: auto;
+        height: 300px;
+        max-width: 600px;
+        border: 1px black solid;
+        border-radius: 20px;
+        margin: 80px auto;
+      }
+
+      .heading {
+        text-align: center;
+        font-weight: 600;
+        font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS",
+          sans-serif;
+      }
+
+      form {
+        width: 100%;
+        padding: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 10px;
+        border-radius: 20px;
+        padding: 5px;
+        border-left: 1px black solid;
+        border-right: 1px black solid;
+      }
+
+      input[type="text"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid black;
+        border-radius: 5px;
+        margin-bottom: 10px;
+      }
+
+      input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 5px;
+        background-color: rgb(43, 43, 140);
+        color: white;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <navbar>
+      <div class="logo">
+        <img src="SIH2023-logo.png" alt="Logo" />
+        <a id="verify" href="verify.html"
+          ><i class="fas fa-solid fa-check"></i>Verify</a
+        >
+        <h1 id="user"><i class="fas fa-user"></i>User</h1>
+      </div>
+    </navbar>
+    <div class="main">
+      <h1 class="heading">Enter your Certificate UID</h1>
+      <form id="dataForm">
+        <label for="userData"
+          ><strong>Note:</strong> Enter a Unique ID and click submit to
+          initialize the transaction on the blockchain</label
+        >
+        <input type="text" id="userData" name="userData" required />
+        <input type="submit" value="Submit" />
+      </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+
+<script>
+    // Connect to Ganache (change the URL to your Ganache instance)
+    const web3 = new Web3("http://127.0.0.1:7545");
+
+    // Ethereum address from which you will send the transaction
+    const senderAddress = "0x63A1b65900C98183Be76996b822CEC0e65545640";
+
+    // Handle form submission
+    document
+        .getElementById("dataForm")
+        .addEventListener("submit", async (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const userData = formData.get("userData");
+
+            // Calculate SHA-256 hash of user data
+            const dataHash = await sha256(userData);
+
+            // Create a transaction
+            const nonce = await web3.eth.getTransactionCount(senderAddress);
+            const gasPrice = await web3.eth.getGasPrice();
+            const gasLimit = 200000; // Adjust gas limit as needed
+            const transaction = {
+                from: senderAddress,
+                to: senderAddress, // Can be the same as senderAddress if you want to store it there
+                nonce: nonce,
+                gasPrice: gasPrice,
+                gas: gasLimit,
+                data: "0x" + dataHash, // Use the calculated hash as the data field
+            };
+
+            // Sign and send the transaction
+            const signedTransaction = await web3.eth.accounts.signTransaction(
+                transaction,
+                "0x6af539eb455f4f68efc273150f64b48bfee49c73f2d5d4d8d4e03c61b89fda67"
+            );
+            const txReceipt = await web3.eth.sendSignedTransaction(
+                signedTransaction.rawTransaction
+            );
+
+            // Get the transaction hash
+            const txHash = txReceipt.transactionHash;
+            console.log("Transaction Hash:", txHash);
+
+            // You can do further processing or display a success message to the user
+        });
+
+    // Function to calculate SHA-256 hash
+    async function sha256(input) {
+        const encoder = new TextEncoder();
+        const data = encoder.encode(input);
+        const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray
+            .map((byte) => byte.toString(16).padStart(2, "0"))
+            .join("");
+        return hashHex;
+    }
+</script>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Verification</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="verify.css">
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <img src="SIH2023-logo.png" alt="Logo">
+            <a id="user" href="submission.html"><i class="fas fa-user"></i>User</a>
+        </div>
+    </nav>
+    <div class="verify main">
+        <h1 class="heading">Data Verification</h1>
+        <form id="verificationForm" method="post" action="store_data.php">
+            <label for="txHash">Enter Transaction Hash:</label>
+            <input type="text" id="txHash" name="txHash" required>
+            <input type="submit" value="Verify">
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.5.2/dist/web3.min.js"></script>
+    <script>
+        const web3 = new Web3('http://127.0.0.1:7545'); // Replace with your Ethereum node URL
+
+        document.getElementById('verificationForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const txHash = formData.get('txHash');
+
+            try {
+                const txData = await web3.eth.getTransaction(txHash);
+                
+                if (txData) {
+                    const input = txData.input;
+                    document.getElementById('result').innerHTML = `Data: ${input}`;
+                } else {
+                    document.getElementById('result').innerHTML = 'Transaction not found.';
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('result').innerHTML = 'Error occurred. Please check the console for details.';
+            }
+        });
+    </script>
+</body>
+</html>
